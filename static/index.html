@@ -1,0 +1,122 @@
+<!--
+    文件名：index.html
+    文件说明：Duyu09's小型网盘静态前端界面
+    创建日期：2023年12月17日 v1.0
+    最后一次修改：2023年12月17日 v1.0
+    文件作者：齐鲁工业大学(山东省科学院) 计算机科学与技术学部 软件工程(软件开发)21-1班 杜宇(No.202103180009). 保留所有权利。
+    著作权声明：Copyright (c) 2023 DuYu (@Duyu09). 
+
+    FILE NAME: INDEX.HTML.
+    FILE DESCRIPTION: DUYU09'S MINI CLOUD STORAGE (NET DISK) STATIC FRONT-END INTERFACE.
+    CREATION DATE: DECEMBER 17, 2023 V1.0
+    LAST MODIFIED: DECEMBER 17, 2023 V1.0
+    FILE AUTHOR: QILU UNIVERSITY OF TECHNOLOGY (SHANDONG ACADEMY OF SCIENCES) DEPARTMENT OF COMPUTER SCIENCE AND TECHNOLOGY SOFTWARE ENGINEERING (SOFTWARE DEVELOPMENT) CLASS 21-1 DU YU (NO.202103180009). ALL RIGHTS RESERVED.
+    COPYRIGHT NOTICE: COPYRIGHT (C) 2023 DUYU (@DUYU09).
+
+    TÊN TẬP TIN: INDEX.HTML
+    MÔ TẢ TẬP TIN: Giao Diện Phía Trước Tĩnh Của Dĩa Mạng Nhỏ
+    NGÀY TẠO: 17 THÁNG 12 NĂM 2023 V1.0
+    LẦN SỬA ĐỔI CUỐI CÙNG: 17 THÁNG 12 NĂM 2023 V1.0
+    TÁC GIẢ TẬP TIN: ĐẠI HỌC CÔNG NGHỆ QILU (VIỆN HÀN LÂM SHANDONG) KHOA KHOA HỌC VÀ CÔNG NGHỆ MÁY TÍNH KỸ THUẬT PHẦN MỀM (PHÁT TRIỂN PHẦN MỀM) LỚP 21-1 DU YU (SỐ 202103180009). BẢO LƯU TẤT CẢ QUYỀN.
+    THÔNG BÁO BẢN QUYỀN: BẢN QUYỀN (C) 2023 DUYU (@DUYU09).
+
+-->
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chào Mừng Bạn Đến Với Ổ Đĩa Mạng Của Duyu09!</title>
+    <link rel="stylesheet" href="https://www.duyu09.site/dsc.css">
+    <script src="/vue.js"></script>
+    <script src="/vue-resource.js"></script>
+    <style>
+        @font-face {
+            src: url("/tahoma.ttf");
+            font-family: Tahoma;
+        }
+    </style>
+</head>
+<body class="dsc-body" style="font-family: Tahoma;">
+<div id="main-div">
+    <div class="dsc-head-div" style="font-family: Tahoma">Chào Mừng Bạn Đến Với Ổ Đĩa Mạng Của Duyu09!</div>
+    <div id="div-001" class="dsc-static-div" style="margin-top: 4.3rem;display: flex;align-items: center;">
+        <div style="margin-left: 1.5rem;font-size: larger;">
+            Số Lượng Tập Tin Hiện Tại: &nbsp;<span><b><i>{{ fileList.length }}</i></b></span>
+        </div>
+        <div id="div-002" style="margin-left: 3rem;display: flex;align-items: center;font-size: larger;">
+            Tải Lên Tập Tin:
+            <form id="form-001" action="/uploadFile" method="post" style="display: flex;" enctype="multipart/form-data">
+                <input type="file" name="file" value="file" style="margin-left: 1rem;background: rgba(88,88,88,78%);" class="dsc-file">&nbsp;
+                <button type="submit" class="dsc-button">Tải Lên</button>
+            </form>
+        </div>
+    </div>
+    <div style="background-color:rgba(58,58,58,48%);border-radius:11px;color:white;display: flex; justify-content: center;margin-top: 1.25rem;flex-direction: column; align-items: center;">
+        <div style="font-size: larger;margin-top: 1.25rem;">
+            <b>Danh Sách Tập Tin</b>
+        </div>
+        <table style="width: 75%;margin-top: 1.25rem; margin-bottom: 1.5rem;">
+            <thead>
+            <tr>
+                <th>Số Thứ Tự</th>
+                <th>Tên Tập Tin</th>
+                <th>Hoạt Động</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr v-for="fs in fileList" :key="fs.id">
+                <td>{{ fs.id + 1 }}</td>
+                <td style="max-width: 40vw; overflow: visible; white-space: normal;">{{ fs.file }}</td>
+                <td><a :href="'/downloadFile?fileName=' + fs.file" target="_blank">Tải Về</a></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<div id="footer-div" class="dsc-foot-div" style="position: relative;margin-top: 1.5rem;margin-bottom: 1.5rem;">
+    Copyright &copy; 2023 DuYu (@Duyu09), Faculty of Computer Science and Technology, QLU (SDAS).
+</div>
+<script>
+    const vm = new Vue({
+        el: "#main-div",
+        data:{
+            fileList:[],
+        },
+        methods:{
+            start: function ()
+            {
+                //代码待定，后续版本补充
+            }
+        },
+        mounted:function () {
+            this.$http.get('/fileList',{params:{}},{emulateJSON:true}).then((result)=>{
+                const b = result.body
+                if(b.status===1)
+                {
+                    prompt(b.description)
+                    return;
+                }
+                else
+                {
+                    this.fileList = b.fileList
+                }
+                })
+        }
+    });
+</script>
+</body>
+<style>
+    #div-001, #div-002, #form-001{
+        @media screen and (max-width: 92.5vh) {
+            flex-direction: column;
+        }
+    }
+    #main-div{
+        @media screen and (max-width: 92.5vh) {
+            margin-top: 6rem;
+        }
+    }
+
+</style>
+</html>
